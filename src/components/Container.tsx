@@ -1,7 +1,6 @@
 // src/components/Container.tsx
 
 import React from 'react';
-
 // Container가 받을 props 타입을 정의합니다.
 interface ContainerProps {
   children: React.ReactNode; // 자식 요소는 React.ReactNode 타입을 사용합니다.
