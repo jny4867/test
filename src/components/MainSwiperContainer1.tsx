@@ -1,62 +1,73 @@
 import React from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Autoplay, EffectCards } from 'swiper/modules';
+import { type SlideData } from '../data/swiperData';
 
-import img1 from '../assets/insight/img1.png';
-import img2 from '../assets/insight/img2.jpg';
-import img3 from '../assets/insight/img3.jpg';
-import img4 from '../assets/insight/img4.png';
-import img5 from '../assets/insight/img5.png';
+interface MainSwiperProps {
+  slides: SlideData[];
+}
 
-const MainSwiperContainer1: React.FC = () => {
+const MainSwiperContainer1: React.FC<MainSwiperProps> = ({slides}) => {
   return (
     <section className='my-8'>
       <Swiper
-
         modules={[Navigation, Pagination, Autoplay, EffectCards]}
-        
-        // 'cards'로 설정하면 3D 카드 효과가 적용됨
         effect={'cards'}
         grabCursor={true}
-        
         cardsEffect={{
-          perSlideOffset: 8, // 카드 간의 간격 (픽셀)
-          perSlideRotate: 2, // 카드 회전 각도
-          slideShadows: false, // 그림자 여부 
+          perSlideOffset: 8,
+          perSlideRotate: 2,
+          slideShadows: false,
         }}
-
         className="mySwiper h-96 max-w-[930px]"
-        
-        // 슬라이드 옵션
         slidesPerView={1}
-        // spaceBetween은 cards 이펙트에서는 자동으로 처리되므로 제거하거나 무시
-        
         navigation={true}
         pagination={{ clickable: true }}
         autoplay={{ delay: 3500, disableOnInteraction: false }}
         loop={true}
       >
-        {/* 슬라이드 내용들 */}
-        <SwiperSlide className="flex items-center justify-center rounded-2xl overflow-hidden shadow-lg">
-           <img src={img1} alt="Slide 1" className="w-full h-full object-cover" />
-        </SwiperSlide>
-        
-        <SwiperSlide className="flex items-center justify-center rounded-2xl overflow-hidden shadow-lg">
-           <img src={img2} alt="Slide 2" className="w-full h-full object-cover" />
-        </SwiperSlide>
+        {slides.map((slide) => (
+          <SwiperSlide 
+            key={slide.id}
+            className="flex flex-col items-center justify-center rounded-2xl overflow-hidden shadow-lg bg-white"
+          >
+             {/* 이미지와 텍스트를 감싸는 컨테이너 */}
+             <div className="relative w-full h-full group">
+               {/* 1. 배경 이미지 */}
+               <img 
+                 src={slide.image} 
+                 alt={slide.title}
+                 className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" 
+               />
+               
+               {/* 2. 텍스트 가독성을 위한 그라데이션 (아래에서 위로 어두워짐) */}
+               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none"></div>
 
-        <SwiperSlide className="flex items-center justify-center rounded-2xl overflow-hidden shadow-lg">
-           <img src={img3} alt="Slide 3" className="w-full h-full object-cover" />
-        </SwiperSlide>
-        
-        <SwiperSlide className="flex items-center justify-center rounded-2xl overflow-hidden shadow-lg">
-           <img src={img4} alt="Slide 4" className="w-full h-full object-cover" />
-        </SwiperSlide>
+               {/* 3. 텍스트 및 버튼 영역 (절대 위치로 배치) */}
+               <div className="absolute inset-0 flex flex-col justify-center items-start p-10 z-10 text-white">
+                 
+                 {/* (1) 상단 태그: Insights */}
+                 <div className="text-sm font-semibold mb-3 flex items-center opacity-90">
+                   <span className="mr-1.5 text-[8px]">●</span> Insights
+                 </div>
 
-        <SwiperSlide className="flex items-center justify-center rounded-2xl overflow-hidden shadow-lg">
-           <img src={img5} alt="Slide 5" className="w-full h-full object-cover" />
-        </SwiperSlide>
+                 {/* (2) 메인 타이틀 */}
+                 <h2 className="text-3xl md:text-4xl font-bold leading-tight drop-shadow-lg mb-6 max-w-2xl line-clamp-3">
+                   {slide.title}
+                 </h2>
 
+                 {/* (3) 하단 버튼: Details */}
+                 <a 
+                   href={slide.link} 
+                   className="inline-block bg-black text-white text-sm font-bold px-6 py-2.5 rounded-full hover:bg-gray-800 transition duration-300"
+                 >
+                   {slide.goto} &gt;
+                 </a>
+
+               </div>
+             </div>
+          </SwiperSlide>
+        ))}
       </Swiper>
     </section>
   );
